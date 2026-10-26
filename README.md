@@ -1,9 +1,13 @@
 # 🏎️ Formula 1 Driver Performance Prediction & Statistical Analysis
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://aditipaulf1drivers-9ue9c4xlzm5y2lcasd9cnw.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28%2B-FF4B4B.svg)](https://streamlit.io/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.3%2B-orange.svg)](https://scikit-learn.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 🚀 **Live Demo**: Experience the interactive dashboard directly on Streamlit Cloud:  
+> 👉 **[F1 Driver Performance Predictor · Streamlit](https://aditipaulf1drivers-9ue9c4xlzm5y2lcasd9cnw.streamlit.app/)**
 
 An end-to-end data science and statistical computing project analyzing historical Formula 1 driver performance data scraped directly from Wikipedia. The project features exploratory data analysis, inferential statistics, formal hypothesis testing, regression analysis, machine learning model comparisons with hyperparameter tuning, and an interactive **Streamlit** dashboard.
 
@@ -117,7 +121,11 @@ pip install -r requirements.txt
 
 ## 💻 Usage
 
-### Launch the Streamlit Web Application
+### 🌐 Live Web Application
+Launch the live application in your browser without any setup:  
+🔗 **[F1 Driver Performance Predictor · Streamlit](https://aditipaulf1drivers-9ue9c4xlzm5y2lcasd9cnw.streamlit.app/)**
+
+### Launch the Streamlit Web Application Locally
 To run the interactive web app locally:
 ```bash
 streamlit run app.py
