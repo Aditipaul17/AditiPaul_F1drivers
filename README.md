@@ -1,6 +1,7 @@
 # 🏎️ Formula 1 Driver Performance Prediction & Statistical Analysis
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://aditipaulf1drivers-9ue9c4xlzm5y2lcasd9cnw.streamlit.app/)
+[![CI & Deployment Pipeline](https://github.com/Aditipaul17/AditiPaul_F1drivers/actions/workflows/ci.yml/badge.svg)](https://github.com/Aditipaul17/AditiPaul_F1drivers/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28%2B-FF4B4B.svg)](https://streamlit.io/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.3%2B-orange.svg)](https://scikit-learn.org/)

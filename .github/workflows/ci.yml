@@ -1,0 +1,40 @@
+name: CI & Deployment Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify imports and app syntax
+        run: |
+          python -c "import f1_pipeline; import f1_plots; print('Modules imported successfully')"
+          python -m py_compile app.py f1_pipeline.py f1_plots.py run_analysis.py
+
+      - name: Run full analysis pipeline
+        run: |
+          python run_analysis.py
+
+      - name: Upload analysis outputs and plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-outputs
+          path: outputs/
