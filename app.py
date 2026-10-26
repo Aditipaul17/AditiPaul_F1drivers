@@ -7,10 +7,7 @@ import f1_plots as G
 
 st.set_page_config(page_title="F1 Driver Performance Predictor", page_icon="🏎️", layout="wide")
 
-
-@st.cache_data(show_spinner="Scraping Wikipedia & cleaning data...")
-def load(refresh=False):
-    return P.get_data(refresh)
+DEFAULT_URL = "https://en.wikipedia.org/wiki/List_of_Formula_One_drivers"
 
 
 @st.cache_resource(show_spinner="Training 5 regression models...")
@@ -18,21 +15,75 @@ def train(target, _df, n_rows):
     return P.train_models(_df, target)
 
 
-st.title("🏎️ F1 Driver Performance Prediction")
-with st.sidebar:
-    st.header("Settings")
-    refresh = st.button("🔄 Re-scrape Wikipedia")
-    target = st.selectbox("Target to predict", ["Wins", "Podiums", "Poles"])
-    alpha = st.slider("Significance level α", 0.01, 0.10, 0.05, 0.01)
+st.title("🏎️ F1 Driver Performance Prediction & Analytics")
+st.markdown(
+    "Extract historical Formula One driver statistics directly from Wikipedia to perform exploratory data analysis, "
+    "statistical hypothesis testing, and machine learning performance prediction."
+)
 
-if refresh:
-    load.clear(); train.clear()
-try:
-    raw, df = load(refresh)
-except Exception as e:
-    st.error(f"Could not load data: {e}")
+# ----------------- Wikipedia URL Loader -----------------
+with st.container():
+    st.subheader("🔗 Data Source (Wikipedia)")
+    col_url, col_btn1, col_btn2 = st.columns([5, 2, 2])
+    with col_url:
+        wiki_url = st.text_input(
+            "Wikipedia URL",
+            value=DEFAULT_URL,
+            placeholder="https://en.wikipedia.org/wiki/List_of_Formula_One_drivers",
+            label_visibility="collapsed",
+        )
+    with col_btn1:
+        load_clicked = st.button("📥 Scrape & Load", type="primary", use_container_width=True)
+    with col_btn2:
+        cached_clicked = st.button("⚡ Use Local Data", use_container_width=True)
+
+if load_clicked:
+    try:
+        with st.spinner(f"Scraping Wikipedia table from {wiki_url}..."):
+            raw, df = P.get_data(refresh=True, url=wiki_url)
+            st.session_state["data"] = (raw, df, wiki_url, False)
+            train.clear()
+    except Exception as e:
+        st.warning(f"Live scrape encountered an issue ({e}). Loading cached dataset...")
+        raw, df = P.get_data(refresh=False)
+        st.session_state["data"] = (raw, df, wiki_url, True)
+elif cached_clicked:
+    raw, df = P.get_data(refresh=False)
+    st.session_state["data"] = (raw, df, wiki_url, True)
+
+# If data has not yet been loaded, prompt the user and stop
+if "data" not in st.session_state:
+    st.info(
+        "👆 **Step 1:** Enter or confirm the Wikipedia URL above and click **'Scrape & Load'** "
+        "(or **'Use Local Data'**) to fetch the drivers dataset and unlock the full statistical analysis and predictor tabs."
+    )
     st.stop()
 
+raw, df, active_url, was_cached = st.session_state["data"]
+
+# Display load confirmation
+if was_cached:
+    st.success(
+        f"✅ Loaded dataset from local cache for [{active_url}]({active_url}) — "
+        f"**{raw.shape[0]}** raw rows, **{df.shape[0]}** clean drivers analyzed."
+    )
+else:
+    st.success(
+        f"✅ Successfully scraped and cleaned live data from [{active_url}]({active_url}) — "
+        f"**{raw.shape[0]}** raw records, **{df.shape[0]}** qualified drivers ready!"
+    )
+
+# Sidebar Settings
+with st.sidebar:
+    st.header("⚙️ Analysis Settings")
+    target = st.selectbox("Target to predict", ["Wins", "Podiums", "Poles"])
+    alpha = st.slider("Significance level α", 0.01, 0.10, 0.05, 0.01)
+    st.divider()
+    if st.button("🔄 Reset / Reload Data"):
+        del st.session_state["data"]
+        st.rerun()
+
+# ----------------- Further Stuffs (Analytical Tabs) -----------------
 tabs = st.tabs(["📋 Data", "📊 EDA", "🎲 Sampling & CLT", "📈 Simple LR", "📉 Multiple LR",
                 "🧪 Hypothesis Tests", "🏆 Model Comparison", "🔮 Predict"])
 

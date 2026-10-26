@@ -136,11 +136,11 @@ def clean_data(raw: pd.DataFrame) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-def get_data(refresh: bool = False):
+def get_data(refresh: bool = False, url: str = URL):
     """Return (raw, clean). Scrapes the web; falls back to the cached CSV if offline."""
     if refresh or not RAW_CSV.exists():
         try:
-            raw = scrape_f1_drivers()
+            raw = scrape_f1_drivers(url)
             raw.to_csv(RAW_CSV, index=False)
         except Exception as e:
             if RAW_CSV.exists():
